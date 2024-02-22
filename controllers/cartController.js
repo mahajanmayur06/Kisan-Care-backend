@@ -5,12 +5,14 @@ exports.getCart = async (req, res) => {
     const username  = req.body.username
     
     try {
-        const user = await User.findOne({ username })
+        const user = await User.findOne({ username: username }).exec()
         if (!user) {
             return res.status(404).json({ message : 'user not found'})
         }
-        const cartItems = user.cart
-        return res.status(200).json({ cart : cartItems})
+        // const cartItems = user.cart
+        // const cartName = 
+        const cart = await Seed.find({ _id : user.cart})
+        return res.status(200).json({ cart : cart })
     }
     catch (error) {
         console.log('Error while fetching items');
@@ -34,7 +36,7 @@ exports.addToCart = async (req, res) => {
             return res.status(404).json({ message: 'Item not found' });
         }
 
-        user.cart.unshift(item.name);
+        user.cart.unshift(item);
         console.log(`${item.name} added to cart successfully`);
         await user.save();
 

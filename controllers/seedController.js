@@ -30,6 +30,7 @@ exports.addSeed = async (req, res) => {
 
     try {
         const newSeed = await seed.save();
+        console.log(`${newSeed} is added`);
         res.status(201).json(newSeed);
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -39,6 +40,7 @@ exports.addSeed = async (req, res) => {
 exports.removeSeed = async (req, res) => {
     try {
         const removedSeed = await Seed.deleteOne({ id: req.params.id });
+        console.log(`${removedSeed} removed`);
         res.json({ message: 'Seed removed', removedSeed });
     } catch (error) {
         res.status(500).json({ message: error.message });
