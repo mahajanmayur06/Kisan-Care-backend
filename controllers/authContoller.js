@@ -12,10 +12,13 @@ const handleLogin = async (req, res) => {
     const match = await bcrypt.compare(password, foundUser.password)
     if (match){
         console.log(`${username} logged in`);
-        res.json(foundUser) 
+        res.status(200).json(foundUser) 
     }
     else{
         console.log('password not matched');
+        res.status(401).json(
+            {message : 'Please enter correct password',
+        })
     }
 }
 

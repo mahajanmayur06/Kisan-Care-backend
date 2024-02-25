@@ -32,7 +32,7 @@ app.use('/seed/:id', seedRoutes)
 app.use('/addseed', seedRoutes)
 app.use('/removeseed/:id', seedRoutes)
 app.use('/cart', require('./routes/cart'));
-app.use('/addToCart', require('./routes/cart'))
+app.use('/addToCart', require('./routes/addToCart'))
 // app.use('/cart', require('./routes/cart'))
 
 // Start the server
