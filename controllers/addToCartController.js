@@ -17,9 +17,11 @@ exports.addToCart = async (req, res) => {
         if (!item) {
             return res.status(404).json({ message: 'Item not found' });
         }
-
-        user.cart.unshift(item);
-        console.log(`${item.name} added to cart successfully`);
+        const isDuplicate = user.cart.some(cartItem => cartItem.equals(item._id));
+        if (isDuplicate) {
+            return res.status(401).json({ message: 'Item already added to cart' });
+        }
+        user.cart.unshift(item)
         await user.save();
 
         return res.json({ message: `${item.name} added to cart successfully` });
