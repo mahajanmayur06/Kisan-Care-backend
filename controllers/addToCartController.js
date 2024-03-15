@@ -11,15 +11,15 @@ exports.addToCart = async (req, res) => {
         const item = await Seed.findOne({ name : name, type : type}); // Use _id for MongoDB ObjectId
 
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            throw new Error(`User ${username} not found`)
         }
 
         if (!item) {
-            return res.status(404).json({ message: 'Item not found' });
+            throw new Error('Item not found')
         }
         const isDuplicate = user.cart.some(cartItem => cartItem.equals(item._id));
         if (isDuplicate) {
-            return res.status(401).json({ message: 'Item already added to cart' });
+            throw new Error('Already added to the cart...')
         }
         user.cart.unshift(item)
         await user.save();
@@ -27,6 +27,6 @@ exports.addToCart = async (req, res) => {
         return res.json({ message: `${item.name} added to cart successfully` });
     } catch (error) {
         console.error('Error adding item to cart:', error);
-        return res.status(500).json({ message: 'Internal server error' });
+        throw new Error('Internal server error');
     }
 };

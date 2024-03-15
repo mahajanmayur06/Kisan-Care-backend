@@ -7,7 +7,7 @@ exports.getCart = async (req, res) => {
     try {
         const user = await User.findOne({ username: username }).exec()
         if (!user) {
-            return res.status(404).json({ message : 'user not found'})
+            throw new Error("User not found1")
         }
         // const cartItems = user.cart
         // const cartName = 

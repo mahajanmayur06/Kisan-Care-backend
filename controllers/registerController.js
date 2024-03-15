@@ -5,13 +5,15 @@ const handleNewUser = async (req, res) => {
     const { email, username, password } = req.body;
 
     if (!email || !username || !password) {
-        return res.status(400).json({ message: 'Username, password, and email are required' });
+        // return res.status(400).json({ message: 'Username, password, and email are required' });
+        throw new Error('Username, password, and email are required')
     }
 
     const duplicates = await User.findOne({ username }).exec();
 
     if (duplicates) {
-        return res.status(409).json({ message: "Username already exists" });
+        // return res.status(409).json({ message: "Username already exists" });
+        throw new Error('Username already exists')
     }
 
     try {
