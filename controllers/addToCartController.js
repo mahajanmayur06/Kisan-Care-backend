@@ -3,7 +3,7 @@ const User = require('../models/User');
 
 exports.addToCart = async (req, res) => {
     const username = req.body.username;
-    const name = req.body.name;
+    const name = req.body.name
     const type = req.body.type
     
     try {

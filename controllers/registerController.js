@@ -2,11 +2,11 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 
 const handleNewUser = async (req, res) => {
-    const { email, username, password } = req.body;
+    const { firstName, lastName, email, username, password } = req.body;
 
-    if (!email || !username || !password) {
+    if (!firstName || !lastName || !email || !username || !password) {
         // return res.status(400).json({ message: 'Username, password, and email are required' });
-        throw new Error('Username, password, and email are required')
+        throw new Error('All fields are madatory')
     }
 
     const duplicates = await User.findOne({ username }).exec();
@@ -23,19 +23,22 @@ const handleNewUser = async (req, res) => {
         const id = lastUser ? lastUser.id + 1 : 1;
 
         const result = await User.create({
-            id: id,
+            firstName : firstName,
+            lastName : lastName,
             email: email,
             username: username,
             password: hashedPwd
         });
+        console.log();
+        console.log();
 
         console.log(`${result.username} created`);
         console.log(result);
 
-        return res.status(201).json({ message: `New user created: ${result.username}` });
+        return res.status(201).json({ "message": `New user created: ${result.username}` });
     } catch (err) {
         console.error('Error creating new user:', err);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(500).json({ "message": 'Internal server error' });
     }
 };
 

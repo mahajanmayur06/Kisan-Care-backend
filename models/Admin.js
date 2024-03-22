@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
+const adminSchema = new Schema({
     firstName: {
         type: String,
         required: true
@@ -24,7 +24,8 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    cart: [{
+    seeds: [
+        {
             seedId: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Seed'
@@ -33,9 +34,10 @@ const userSchema = new Schema({
                 type: Number,
                 default: 1
             }
-        }]
+        }
+    ]
 }, {
-    collection : 'users'
+    collection: 'admins'
 });
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('Admin', adminSchema);

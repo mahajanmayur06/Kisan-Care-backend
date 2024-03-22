@@ -2,7 +2,8 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt')
 
 const handleLogin = async (req, res) => {
-    const {username, password} = req.body;
+    const {username, password} = req.query;
+    
     if (!username || !password){
         throw new Error('All fields are mandatory')
     }

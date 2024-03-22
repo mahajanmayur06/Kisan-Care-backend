@@ -9,13 +9,20 @@ const SeedSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    image : {
+        type : String
+    },
+    price : {
+        type : Number,
+        required : true
+    },
+    distributer : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'Admin'
+    },
     date: {
         type: Date,
         default: Date.now()
-    },
-    addedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User' // Reference to the User model
     }
 }, {
         collection : 'seeds'

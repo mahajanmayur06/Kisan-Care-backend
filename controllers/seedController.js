@@ -26,6 +26,8 @@ exports.addSeed = async (req, res) => {
         id: req.body.id,
         name: req.body.name,
         type: req.body.type,
+        price : req.body.price,
+        distributer : req.body.distributer
     });
 
     try {
