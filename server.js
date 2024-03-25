@@ -1,21 +1,17 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors')
+require('dotenv').config()
+const app = express();
+const PORT = process.env.PORT || 3500;
+
+// importing files
 const corsOptions = require('./config/corsOptions');
 const credentials = require('./middleware/credentials');
-const seedRoutes = require('./routes/seedRoutes')
-
-const app = express();
-const PORT = 3500;
-const CONNECTION_URI = "mongodb+srv://mongo_user:Mayur123@cluster0.cwjjseb.mongodb.net/project?retryWrites=true&w=majority";
+const dbConn = require('./config/dbConn')
 
 // Connect to MongoDB
-mongoose.connect(CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true, family: 4 })
-    .then(() => {
-        console.log('Connected to MongoDB successfully');
-    }).catch(err => {
-        console.log('No connection to MongoDB');
-    });
+dbConn()
 
 // Middleware
 app.use(credentials);
@@ -27,13 +23,12 @@ app.use('/images', express.static('upload/images'));
 // Routes
 app.use('/register', require('./routes/register'));
 app.use('/auth', require('./routes/auth'));
-app.use('/seeds', seedRoutes)
-app.use('/seed/:id', seedRoutes)
-app.use('/addseed', seedRoutes)
-app.use('/removeseed/:id', seedRoutes)
+app.use('/seeds', require('./routes/seedRoutes'))
+app.use('/seed/:id', require('./routes/seedRoutes'))
+app.use('/addseed', require('./routes/seedRoutes'))
+app.use('/removeseed/:id', require('./routes/seedRoutes'))
 app.use('/cart', require('./routes/cart'));
 app.use('/addToCart', require('./routes/addToCart'))
-// app.use('/cart', require('./routes/cart'))
 
 // Start the server
 mongoose.connection.once('open', () => {
