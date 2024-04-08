@@ -3,30 +3,45 @@ const User = require('../models/User');
 
 exports.addToCart = async (req, res) => {
     const username = req.body.username;
-    const name = req.body.name
-    const type = req.body.type
+    const name = req.body.name;
+    const type = req.body.type;
+    const quantity = req.body.quantity
     
     try {
         const user = await User.findOne({ username });
-        const item = await Seed.findOne({ name : name, type : type}); // Use _id for MongoDB ObjectId
+        const item = await Seed.findOne({ name, type });
 
         if (!user) {
-            throw new Error(`User ${username} not found`)
+            console.log('Username', username, 'not found');
+            return res.status(404).json({ message: `User ${username} not found` });
         }
 
         if (!item) {
-            throw new Error('Item not found')
+            console.log('Item not found');
+            return res.status(404).json({ message: 'Item not found' });
         }
-        const isDuplicate = user.cart.some(cartItem => cartItem.equals(item._id));
-        if (isDuplicate) {
-            throw new Error('Already added to the cart...')
-        }
-        user.cart.unshift(item)
-        await user.save();
 
+        const isDuplicate = user.cart.some(cartItem => cartItem.equals(item._id));
+
+        if (isDuplicate) {
+            const duplicateItem = user.cart.find(cartItem => cartItem.equals(item._id));
+            if (duplicateItem.quantity !== quantity) {
+                duplicateItem.quantity = quantity;
+                await user.save();
+                console.log(`${item.name} quantity updated in cart`);
+                return res.json({ message: `${item.name} quantity updated in cart` });
+            } else {
+                console.log('Already in cart');
+                return res.status(400).json({ message: 'Item is already in cart' });
+            }
+        }
+        
+        user.cart.unshift(item);
+        await user.save();
+        console.log(`${item.name} added to cart successfully`);
         return res.json({ message: `${item.name} added to cart successfully` });
     } catch (error) {
         console.error('Error adding item to cart:', error);
-        throw new Error('Internal server error');
+        return res.status(500).json({ message: 'Internal server error' });
     }
 };

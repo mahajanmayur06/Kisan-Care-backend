@@ -24,16 +24,37 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    address: {
+        type: String,
+        required : true,
+        default : "Mumbai"
+    },
     cart: [{
-            seedId: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Seed'
-            },
-            quantity: {
-                type: Number,
-                default: 1
-            }
-        }]
+        seedId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Seed'
+        },
+        quantity: {
+            type: Number,
+            default: 1
+        }
+    }],
+    wishList: [{
+        seedId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Seed'
+        }}
+    ],
+    myOrders: [{
+        seedId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Seed'
+        },
+        quantity: {
+            type: Number,
+            default: 1
+        }
+    }]
 }, {
     collection : 'users'
 });

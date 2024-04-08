@@ -5,7 +5,7 @@ exports.getAllSeeds = async (req, res) => {
         const seeds = await Seed.find();
         res.json(seeds);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ 'message' : error.message });
     }
 };
 
@@ -13,11 +13,11 @@ exports.getSeed = async (req, res) => {
     try {
         const seed = await Seed.findOne({ id: req.params.id });
         if (!seed) {
-            return res.status(404).json({ message: 'Seed not found' });
+            return res.status(404).json({ 'message': 'Seed not found' });
         }
         res.json(seed);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ 'message': error.message });
     }
 };
 
@@ -35,7 +35,7 @@ exports.addSeed = async (req, res) => {
         console.log(`${newSeed} is added`);
         res.status(201).json(newSeed);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(400).json({ 'message': error.message });
     }
 };
 
@@ -45,6 +45,6 @@ exports.removeSeed = async (req, res) => {
         console.log(`${removedSeed} removed`);
         res.json({ message: 'Seed removed', removedSeed });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ 'message': error.message });
     }
 };

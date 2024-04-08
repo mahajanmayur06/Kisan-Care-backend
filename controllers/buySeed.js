@@ -1,3 +1,6 @@
-const express = require('express')
-const app = express()
+const User = require('../models/Seed')
+const Seed = require('../models/Seed')
 
+exports.buySeed = async (req, res) => {
+    
+}

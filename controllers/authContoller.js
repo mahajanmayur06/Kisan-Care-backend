@@ -22,7 +22,7 @@ const handleLogin = async (req, res) => {
         }
         else{
             console.log(`password not matched for ${username}`);
-            throw new Error('Enter correct password...')
+            res.send(json({ 'message' : 'Enter correct password...' }))
         }
     } catch (err){
         console.log(err.message);
