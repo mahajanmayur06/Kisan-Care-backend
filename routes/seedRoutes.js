@@ -7,4 +7,9 @@ router.get('/', getSeed);
 router.post('/', addSeed);
 router.delete('/', removeSeed);
 
+router.get('/getAllSeeds', getAllSeeds)
+router.get('/seed/:id', getSeed)
+router.post('/addseed', addSeed)
+router.delete('/removeseed/:id', removeSeed)
+
 module.exports = router;

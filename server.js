@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors')
+const axios = require('axios')
 require('dotenv').config()
 const app = express();
 const Razorpay = require('razorpay')
@@ -28,15 +29,10 @@ app.use(express.json());
 app.use('/images', express.static('upload/images'));
 
 // Routes
-app.use('/register', require('./routes/register'));
-app.use('/auth', require('./routes/auth'));
-app.use('/seeds', require('./routes/seedRoutes'))
-app.use('/seed/:id', require('./routes/seedRoutes'))
-app.use('/addseed', require('./routes/seedRoutes'))
-app.use('/removeseed/:id', require('./routes/seedRoutes'))
-app.use('/cart', require('./routes/cart'));
-app.use('/addToCart', require('./routes/addToCart'))
-app.use('/checkout', require('./routes/paymentRoute'))
+app.use('/', require('./routes/user'));
+app.use('/', require('./routes/seedRoutes'))
+app.use('/', require('./routes/cart'));
+// app.use('/checkout', require('./routes/paymentRoute'))
 
 
 app.post('/order', async(req, res) => {
@@ -50,14 +46,28 @@ app.post('/order', async(req, res) => {
         const order = await razorpay.orders.create(options);
     
         if (!order) {
-            return res.status(500).send('Error occured')
+            return res.status(500).json('Error occured')
         }
     }
     catch(err) {
-        res.send(json({ 'message' : err.message}))
+        return res.json({ 'message' : err.message})
     }
 })
 
+// handling weather api
+app.get('/weather-forecast', async (req, res) => {
+    const cityName = req.query.cityName;
+    const URL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${process.env.WEATHER_api_key}`;
+
+    try {
+        const response = await axios.get(URL);
+        console.log(response.data, " fetched");
+        return res.status(200).json(response.data);
+    } catch (error) {
+        console.error('Error fetching weather data:', error);
+        return res.status(500).json({ message: 'Error fetching weather data' });
+    }
+});
 
 // Start the server
 mongoose.connection.once('open', () => {
