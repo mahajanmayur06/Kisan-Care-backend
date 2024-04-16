@@ -10,7 +10,9 @@ const PORT = process.env.PORT || 3500;
 // importing files
 const corsOptions = require('./config/corsOptions');
 const credentials = require('./middleware/credentials');
-const dbConn = require('./config/dbConn')
+const dbConn = require('./config/dbConn');
+// const { default: OpenAI } = require('openai/index.mjs');
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 // create instance of razopay
 // const instance = new Razorpay({
@@ -32,8 +34,51 @@ app.use('/images', express.static('upload/images'));
 app.use('/', require('./routes/user'));
 app.use('/', require('./routes/seedRoutes'))
 app.use('/', require('./routes/cart'));
+app.use('/', require('./routes/genAI'))
 // app.use('/checkout', require('./routes/paymentRoute'))
 
+// open-ai integration
+// Remove this line since we'll use dynamic import instead
+// const { default: OpenAI } = require('openai/index.mjs');
+
+// Instead, use dynamic import to load the OpenAI module
+// let OpenAI;
+// import('openai/index.mjs').then(module => {
+//     OpenAI = module.default;
+
+//     // Now you can use OpenAI here or inside your route handlers
+//     const openai = new OpenAI({
+//         apiKey: process.env.OPENAI_api_key
+//     });
+
+//     // Your route handler for '/getResponse' can use OpenAI
+//     app.get('/getResponse', async (req, res) => {
+//         try {
+//             const prompt = req.body.promt;
+//             const response = await openai.chat.completions.create({
+//                 model: 'gpt-3.5-turbo',
+//                 message: [{
+//                     "role": "user",
+//                     "content": prompt
+//                 }],
+//                 max_tokens: 100
+//             });
+//             console.log(response);
+//             res.send(response); // Send the response back to the client
+//         } catch(err) {
+//             console.log(err.message);
+//             res.json({message : err.message})
+//         }
+//     });
+
+//     // Continue with other route handlers and server start code
+// }).catch(err => {
+//     console.error('Error loading OpenAI module:', err);
+//     // Handle the error, perhaps by exiting the application or providing a fallback solution
+// });
+
+
+//!Generate content route
 
 app.post('/order', async(req, res) => {
     try {
