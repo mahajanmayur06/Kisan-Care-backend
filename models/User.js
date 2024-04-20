@@ -25,14 +25,14 @@ const userSchema = new Schema({
         required: true
     },
     address: {
-        type: String,
-        required : true,
-        default : "Mumbai"
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Address',
     },
     cart: [{
         seedId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Seed'
+            ref: 'Seed',
+            // required : true
         },
         quantity: {
             type: Number,

@@ -16,6 +16,10 @@ const SeedSchema = new mongoose.Schema({
         type : Number,
         required : true
     },
+    season : {
+        type : String,
+        requied : true
+    },
     distributer : {
         type : mongoose.Schema.Types.ObjectId,
         ref : 'Admin'

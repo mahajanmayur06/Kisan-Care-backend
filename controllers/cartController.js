@@ -2,29 +2,36 @@ const Seed = require('../models/Seed');
 const User = require('../models/User');
 
 exports.getCart = async (req, res) => {
-    const username  = req.body.username
-    
+    const username = req.query.username;
+
     try {
-        const user = await User.findOne({ username: username }).exec()
+        const user = await User.findOne({ username: username }).exec();
         if (!user) {
-            throw new Error("User not found1")
+            return res.status(404).json({ message: "User not found" });
         }
-        // const cartItems = user.cart
-        // const cartName = 
-        const cart = await Seed.find({ _id : user.cart})
-        return res.status(200).json({ cart : cart })
+        if (user.cart.length === 0) {
+            return res.status(404).json({ message: 'Cart is Empty' });
+        }
+
+        const cartItems = [];
+        for (const cartItem of user.cart) {
+            const item = await Seed.findOne({ _id: cartItem.seedId });
+            if (item) {
+                cartItems.push({ item, quantity: cartItem.quantity });
+            }
+        }
+
+        console.log(cartItems);
+        res.status(200).json(cartItems);
+    } catch (error) {
+        console.log('Error while fetching items:', error.message);
+        res.status(500).json({ message: 'Server error' });
     }
-    catch (error) {
-        console.log('Error while fetching items');
-        res.status(500).json( {message : 'Server error'})
-    }
-}
+};
+
 
 exports.addToCart = async (req, res) => {
-    const username = req.body.username;
-    const name = req.body.name;
-    const type = req.body.type;
-    const quantity = req.body.quantity
+    const { username, name, type, quantity } = req.body;
     
     try {
         const user = await User.findOne({ username });
@@ -39,28 +46,43 @@ exports.addToCart = async (req, res) => {
             console.log('Item not found');
             return res.status(404).json({ message: 'Item not found' });
         }
-
-        const isDuplicate = user.cart.some(cartItem => cartItem.equals(item._id));
+        
+        const isDuplicate = user.cart.some(cartItem => cartItem.seedId.equals(item._id));
 
         if (isDuplicate) {
-            const duplicateItem = user.cart.find(cartItem => cartItem.equals(item._id));
-            if (duplicateItem.quantity !== quantity) {
-                duplicateItem.quantity = quantity;
-                await user.save();
-                console.log(`${item.name} quantity updated in cart`);
-                return res.json({ message: `${item.name} quantity updated in cart` });
-            } else {
-                console.log('Already in cart');
-                return res.status(400).json({ message: 'Item is already in cart' });
-            }
+            return res.status(400).json({ message: 'maje aa gaye bhai' });
         }
         
-        user.cart.unshift(item);
+        const cartItem = {
+            seedId: item._id,
+            quantity: quantity
+        };
+
+        user.cart.push(cartItem);
         await user.save();
-        console.log(`${item.name} added to cart successfully`);
-        return res.json({ message: `${item.name} added to cart successfully` });
+
+        // Populate the cartItem's seedId field to get the complete seed object
+        await user.populate('cart.seedId');
+        
+        console.log(user.cart);
+        return res.json({ message: `${item.name} added to cart successfully`, cart: user.cart });
     } catch (error) {
         console.error('Error adding item to cart:', error);
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+exports.clearCart = async (req, res) => {
+    const username = req.body.username
+    try {
+        const user = await User.findOne({ username : username }).exec()
+        user.cart = []
+        await user.save()
+        console.log('cart cleared');
+        res.status(200).json({ message : 'Cart cleared successfully'})
+    }
+    catch (err) {
+        console.log(err.message);
+        res.status(500).json({ message : err.message})
+    }
+}

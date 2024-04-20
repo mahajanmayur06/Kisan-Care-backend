@@ -35,6 +35,7 @@ app.use('/', require('./routes/user'));
 app.use('/', require('./routes/seedRoutes'))
 app.use('/', require('./routes/cart'));
 app.use('/', require('./routes/genAI'))
+app.use('/', require('./routes/wishList'))
 // app.use('/checkout', require('./routes/paymentRoute'))
 
 // open-ai integration

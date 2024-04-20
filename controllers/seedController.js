@@ -5,34 +5,40 @@ exports.getAllSeeds = async (req, res) => {
         const seeds = await Seed.find();
         res.json(seeds);
     } catch (error) {
-        res.status(500).json({ 'message' : error.message });
+        res.status(500).json({ 'message' : 'Cant find Seeds' });
     }
 };
 
 exports.getSeed = async (req, res) => {
     try {
-        const seed = await Seed.findOne({ id: req.params.id });
+        const { name, type } = req.query;
+        const seed = await Seed.findOne({ name, type });        
+        console.log(`${seed.name} is fetched`);
         if (!seed) {
             return res.status(404).json({ 'message': 'Seed not found' });
         }
-        res.json(seed);
+        res.status(200).json(seed);
     } catch (error) {
+        console.log(error.message);
         res.status(500).json({ 'message': error.message });
     }
 };
 
 exports.addSeed = async (req, res) => {
-    const seed = new Seed({
-        id: req.body.id,
-        name: req.body.name,
-        type: req.body.type,
-        price : req.body.price,
-        distributer : req.body.distributer
-    });
-
     try {
+        // const distributer = await Admin.findOne({ username: req.body.distributer });
+        // if (!distributer) {
+        //     res.status(404).json({ message: 'Distributor not found' });
+        // }    
+        const seed = new Seed({
+            id: req.body.id,
+            name: req.body.name,
+            type: req.body.type,
+            price : req.body.price,
+            // distributer : distributer._id
+        });
         const newSeed = await seed.save();
-        console.log(`${newSeed} is added`);
+        console.log(`${newSeed} is added to db`);
         res.status(201).json(newSeed);
     } catch (error) {
         res.status(400).json({ 'message': error.message });
