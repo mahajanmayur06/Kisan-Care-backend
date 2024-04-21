@@ -29,27 +29,17 @@ const userSchema = new Schema({
         ref: 'Address',
     },
     cart: [{
-        seedId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Seed',
-            // required : true
-        },
+        seedName : String,
         quantity: {
             type: Number,
             default: 1
         }
     }],
     wishList: [{
-        seedId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Seed'
-        }}
-    ],
+        seedName : String
+    }],
     myOrders: [{
-        seedId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Seed'
-        },
+        seedName : String,
         quantity: {
             type: Number,
             default: 1

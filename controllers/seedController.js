@@ -54,3 +54,15 @@ exports.removeSeed = async (req, res) => {
         res.status(500).json({ 'message': error.message });
     }
 };
+
+exports.getSeed = async (req, res) => {
+    const { seedType } = req.query
+    try {
+        const seeds = await Seed.find({ type : seedType})
+        
+    }
+    catch(err) {
+        console.log(err.message);
+        res.status(500).json({message : err.message})
+    }
+}

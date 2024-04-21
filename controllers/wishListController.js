@@ -14,11 +14,13 @@ exports.addToWishlist = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message : 'User not found'})
         }
-        const isDuplicate = user.wishList.some(cartItem => cartItem.equals(seed._id));
-        if (isDuplicate) {
+        const hasItem = user.wishList.filter(cartItem => cartItem.equals(seed._id));
+        if (hasItem.length > 0) {
             return res.status(304).json({message : 'Already added to the wishlist'})
         }
-        user.wishList.push(seed)
+        user.wishList.push({
+            seedName : seedName
+        })
         await user.save()
         return res.json(user.wishList)
     }
@@ -36,8 +38,15 @@ exports.getWishlist = async (req, res) => {
         }
         const wishList = []
         for (item of user.wishList) {
-            const seedItem = await Seed.findOne({ _id : item._id})
-            wishList.push(seedItem)
+            const seedItem = await Seed.findOne({ name : item.seedName}).exec()
+            if (!seedItem) return res.status(404).json({ message : 'kya kar raha hai bhai '})
+            wishList.push({
+                seedName : seedItem.name,
+                seedType : seedItem.type,
+                seedPrice : seedItem.price,
+                seedImage : seedItem.image,
+                seedSeason : seedItem.season
+            })
         }
         res.status(200).json(wishList)
     }
@@ -50,17 +59,17 @@ exports.deleteFromWishlist = async (req, res) => {
     try {
         const { username, seedName } = req.body;
 
-        const user = await User.findOne({ username : username }).populate('wishList.seedId').exec();
+        const user = await User.findOne({ username : username }).exec();
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-    
+        
         const seed = await Seed.findOne({ name : seedName}).exec()
-        user.wishList = await user.wishList.filter(item => item.seedId !== seed._id);
+        user.wishList = user.wishList.filter(item => item.seedName !== seedName);
         await user.save();
         
         console.log("Seed removed from wishlist:\n", user.wishList);
-        return res.json({ message : `${seedName} removed from wishlist`});
+        return res.status(200).json({ message : `${seedName} removed from wishlist`, wishList : user.wishList});
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }

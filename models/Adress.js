@@ -1,14 +1,8 @@
 const mongoose = require('mongoose');
 
 const addressSchema = new mongoose.Schema({
-    type: {
-        type: String,
-        enum: ['shipping', 'billing'],
-        required: true
-    },
     username: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref : 'User',
+        type : String,
         required: true
     },
     address_line1: {

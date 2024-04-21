@@ -15,9 +15,16 @@ exports.getCart = async (req, res) => {
 
         const cartItems = [];
         for (const cartItem of user.cart) {
-            const item = await Seed.findOne({ _id: cartItem.seedId });
+            const item = await Seed.findOne({ name : cartItem.seedName });
             if (item) {
-                cartItems.push({ item, quantity: cartItem.quantity });
+                cartItems.push({
+                    seedName : item.name, 
+                    seedType : item.type, 
+                    seedPrice : item.price,
+                    seedImage : item.image,
+                    seedSeason : item.season,
+                    quantity: cartItem.quantity 
+                });
             }
         }
 
@@ -47,14 +54,21 @@ exports.addToCart = async (req, res) => {
             return res.status(404).json({ message: 'Item not found' });
         }
         
-        const isDuplicate = user.cart.some(cartItem => cartItem.seedId.equals(item._id));
+        const hasItem = user.cart.filter(cartItem => cartItem.seedName === name);
 
-        if (isDuplicate) {
-            return res.status(400).json({ message: 'maje aa gaye bhai' });
+        if (hasItem.length > 0) { 
+            const itemObj = hasItem[0]
+            if (itemObj.quantity !== quantity) {
+                itemObj.quantity = quantity
+                console.log(user.cart);
+                await user.save()
+                return res.status(201).json({ message: 'quantity updated'} );
+            }
+            return res.status(201).json({ message : 'No need to change quantity'})
         }
         
         const cartItem = {
-            seedId: item._id,
+            seedName: item.name,
             quantity: quantity
         };
 
@@ -62,7 +76,7 @@ exports.addToCart = async (req, res) => {
         await user.save();
 
         // Populate the cartItem's seedId field to get the complete seed object
-        await user.populate('cart.seedId');
+        await user.populate('cart.seedName');
         
         console.log(user.cart);
         return res.json({ message: `${item.name} added to cart successfully`, cart: user.cart });
@@ -82,6 +96,21 @@ exports.clearCart = async (req, res) => {
         res.status(200).json({ message : 'Cart cleared successfully'})
     }
     catch (err) {
+        console.log(err.message);
+        res.status(500).json({ message : err.message})
+    }
+}
+
+exports.removeFromCart = async (req, res) => {
+    const {username, seedName }= req.body
+    try {  
+        const user = await User.findOne({ username : username}).exec()
+        user.cart = user.cart.filter((cartItem) => cartItem.seedName !== seedName)
+
+        user.save()
+        console.log('Removed from cart');
+        res.status(200).json(user.cart)
+    }catch (err) {
         console.log(err.message);
         res.status(500).json({ message : err.message})
     }
