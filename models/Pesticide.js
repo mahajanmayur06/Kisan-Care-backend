@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const fertilizerSchema = new mongoose.Schema({
+const pesticideSchema = new mongoose.Schema({
     name: { type: String, required: true },
     price: { type: Number, required: true },
     weight: {type : Number, default : 1},
@@ -8,6 +8,6 @@ const fertilizerSchema = new mongoose.Schema({
     image: { type: String }
 });
 
-const Fertilizer = mongoose.model('Fertilizer', fertilizerSchema);
+const Pesticide = mongoose.model('Pesticide', pesticideSchema);
 
-module.exports = Fertilizer;
+module.exports = Pesticide ;

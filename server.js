@@ -36,6 +36,8 @@ app.use('/', require('./routes/seedRoutes'))
 app.use('/', require('./routes/cart'));
 app.use('/', require('./routes/genAI'))
 app.use('/', require('./routes/wishList'))
+app.use('/', require('./routes/fertilizers'))
+app.use('/', require('./routes/pesticides'))
 // app.use('/checkout', require('./routes/paymentRoute'))
 
 // open-ai integration
@@ -107,7 +109,7 @@ app.get('/weather-forecast', async (req, res) => {
 
     try {
         const response = await axios.get(URL);
-        console.log(response.data, " fetched");
+        // console.log(response.data, " fetched");
         return res.status(200).json(response.data);
     } catch (error) {
         console.error('Error fetching weather data:', error);

@@ -2,18 +2,18 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 
 const handleNewUser = async (req, res) => {
-    const { firstName, lastName, email, username, password } = req.body;
+    const { firstName, lastName, email, username, location,  password } = req.body;
 
-    if (!firstName || !lastName || !email || !username || !password) {
-        // return res.status(400).json({ message: 'Username, password, and email are required' });
-        throw new Error('All fields are madatory')
-    }
+    // if (!firstName || !lastName || !email || !username || !password) {
+    //     // return res.status(400).json({ message: 'Username, password, and email are required' });
+    //     res.json({message : 'All fields are mandatory'})
+    // }
 
     const duplicates = await User.findOne({ username }).exec();
 
     if (duplicates) {
         // return res.status(409).json({ message: "Username already exists" });
-        throw new Error('Username already exists')
+        res.json({ message :'Username already exists' })
     }
 
     try {
@@ -26,11 +26,10 @@ const handleNewUser = async (req, res) => {
             firstName : firstName,
             lastName : lastName,
             email: email,
+            location : location,
             username: username,
             password: hashedPwd
         });
-        console.log();
-        console.log();
 
         console.log(`${result.username} created`);
         console.log(result);

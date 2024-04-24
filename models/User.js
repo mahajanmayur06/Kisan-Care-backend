@@ -15,6 +15,10 @@ const userSchema = new Schema({
         required: true,
         unique: true
     },
+    location: {
+        type : String,
+        required : true
+    },
     username: {
         type: String,
         required: true,
@@ -29,17 +33,31 @@ const userSchema = new Schema({
         ref: 'Address',
     },
     cart: [{
-        seedName : String,
+        itemName: {
+            type : String
+        },
+        type: { 
+            type : String
+        },
         quantity: {
             type: Number,
             default: 1
         }
     }],
+    cartTotal : {
+        type : Number,
+        default : 0
+    },
     wishList: [{
-        seedName : String
+        itemName :{ 
+            type : String
+        },
+        type : {
+            type : String
+        }
     }],
     myOrders: [{
-        seedName : String,
+        itemName : String,
         quantity: {
             type: Number,
             default: 1

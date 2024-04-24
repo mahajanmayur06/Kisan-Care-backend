@@ -1,31 +1,43 @@
 const express = require('express')
 const User = require('../models/User')
 const Seed = require('../models/Seed')
+const Fertilizer = require('../models/Fertilizer');
+const Pesticide = require('../models/Pesticide');
 
 exports.addToWishlist = async (req, res) => {
     try {
-        const {username, seedName} = req.body
+        const {username, name, type} = req.body
         const user = await User.findOne({ username : username}).exec()
-        const seed = await Seed.findOne({ name : seedName}).exec()
+        let item;
 
-        if (!seed) {
-            return res.status(404).json({ message : 'Seed not found'})
+        if (type === 'seed') {
+            item = await Seed.findOne({ name });
+        } else if (type === 'fertilizer') {
+            item = await Fertilizer.findOne({ name });
+        } else {
+            item = await Pesticide.findOne({ name });
         }
+
         if (!user) {
             return res.status(404).json({ message : 'User not found'})
         }
-        const hasItem = user.wishList.filter(cartItem => cartItem.equals(seed._id));
+
+        if (!item) {
+            return res.status(404).json({ message : 'Item not found'})
+        }
+        const hasItem = user.wishList.filter(cartItem => cartItem.itemName === item.name);
         if (hasItem.length > 0) {
             return res.status(304).json({message : 'Already added to the wishlist'})
         }
         user.wishList.push({
-            seedName : seedName
+            itemName : name,
+            type : type
         })
         await user.save()
         return res.json(user.wishList)
     }
     catch(err) {
-        return res.stautus(500).json({ message : err.message})
+        return res.status(500).json({ message : err.message})
     }
 }
 
@@ -36,19 +48,45 @@ exports.getWishlist = async (req, res) => {
         if (user.wishList.length === 0) {
             return res.json({ message : 'Your wishlist is empty'})
         }
-        const wishList = []
-        for (item of user.wishList) {
-            const seedItem = await Seed.findOne({ name : item.seedName}).exec()
-            if (!seedItem) return res.status(404).json({ message : 'kya kar raha hai bhai '})
-            wishList.push({
-                seedName : seedItem.name,
-                seedType : seedItem.type,
-                seedPrice : seedItem.price,
-                seedImage : seedItem.image,
-                seedSeason : seedItem.season
-            })
+        const wishlists = [];
+        let item;
+        for (const cartItem of user.wishList) {
+            if (cartItem.type == 'seed') {
+                item = await Seed.findOne({ name : cartItem.itemName});
+                if (item) {
+                    wishlists.push({
+                        seedName : item.name, 
+                        seedType : item.type, 
+                        seedPrice : item.price,
+                        type : type
+                    });
+                }
+            }
+            else if (cartItem.type == 'fertilizer') {
+                item = await Fertilizer.findOne({ name : cartItem.itemName });
+                if (item) {
+                    wishlists.push({
+                        name : item.name, 
+                        price : item.price,
+                        discription : item.disc,
+                        type : type
+                    });
+                }
+            }
+            else {
+                item = await Fertilizer.findOne({ name : cartItem.itemName });
+                if (item) {
+                    wishlists.push({
+                        name : item.name, 
+                        price : item.price,
+                        discription : item.disc,
+                        type : type
+                    });
+                }
+            }
         }
-        res.status(200).json(wishList)
+        console.log(wishlists);
+        res.status(200).json(wishlists)
     }
     catch(err) {
         return res.json({ message : err.message})
@@ -57,19 +95,28 @@ exports.getWishlist = async (req, res) => {
 
 exports.deleteFromWishlist = async (req, res) => {
     try {
-        const { username, seedName } = req.body;
+        const { username, name, type } = req.body;
 
         const user = await User.findOne({ username : username }).exec();
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
         
-        const seed = await Seed.findOne({ name : seedName}).exec()
-        user.wishList = user.wishList.filter(item => item.seedName !== seedName);
+        let item;
+
+        if (type === 'seed') {
+            item = await Seed.findOne({ name });
+        } else if (type === 'fertilizer') {
+            item = await Fertilizer.findOne({ name });
+        } else {
+            item = await Pesticide.findOne({ name });
+        }
+
+        user.wishList = user.wishList.filter(item => item.itemName !== name);
         await user.save();
         
         console.log("Seed removed from wishlist:\n", user.wishList);
-        return res.status(200).json({ message : `${seedName} removed from wishlist`, wishList : user.wishList});
+        return res.status(200).json({ message : `${name} removed from wishlist`, wishList : user.wishList});
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }
