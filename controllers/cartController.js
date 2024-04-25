@@ -150,7 +150,7 @@ exports.removeFromCart = async (req, res) => {
 }
 
 exports.getCartTotal = async (req, res) => {
-    const username = req.query
+    const username = req.query.username
     try {
         const user =  await User.findOne({ username}).exec()
         res.status(200).json(user.cartTotal)
