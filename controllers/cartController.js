@@ -15,6 +15,9 @@ exports.getCart = async (req, res) => {
             return res.status(404).json({ message: 'Cart is Empty' });
         }
 
+        if (!user.cart) {
+            res.status(204).json({ message : 'Cart is empty'})
+        }
         const cartItems = [];
         let total = 0;
 
@@ -112,6 +115,9 @@ exports.clearCart = async (req, res) => {
     const username = req.body.username
     try {
         const user = await User.findOne({ username : username }).exec()
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
         user.cart = []
         user.cartTotal = 0
         await user.save()
@@ -129,7 +135,7 @@ exports.removeFromCart = async (req, res) => {
     try {  
         const user = await User.findOne({ username : username}).exec()
         let itemArray = user.cart.filter((cartItem) => cartItem.itemName === name)
-
+        console.log(itemArray);
         if (itemArray[0].type === 'seed') {
             item = await Seed.findOne({ name });
         } else if (itemArray[0].type === 'fertilizer') {
@@ -140,6 +146,7 @@ exports.removeFromCart = async (req, res) => {
 
         user.cartTotal = user.cartTotal - item.price * itemArray[0].quantity
         user.cart = user.cart.filter((cartItem) => cartItem.itemName !== name)
+        console.log(`${itemArray[0].itemName} removed from cart`);
         await user.save()
         console.log('Removed from cart');
         res.status(200).json(user.cart)
