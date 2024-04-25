@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
+const axios = require('axios')
 
 const handleNewUser = async (req, res) => {
     const { firstName, lastName, email, username, location,  password } = req.body;
@@ -22,11 +23,16 @@ const handleNewUser = async (req, res) => {
         const lastUser = userArray.slice(-1)[0];
         const id = lastUser ? lastUser.id + 1 : 1;
 
+        const soilType = await axios.post('http://localhost:3500/getSoilType', {
+            location : location
+        })
+
         const result = await User.create({
             firstName : firstName,
             lastName : lastName,
             email: email,
             location : location,
+            soilType : soilType.data,
             username: username,
             password: hashedPwd
         });

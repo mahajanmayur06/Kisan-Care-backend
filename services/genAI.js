@@ -52,3 +52,23 @@ exports.weatherResponse = async (req, res) => {
 };
 
 
+exports.getSoilType = async (req, res) => {
+    const { location } = req.body;
+    try {
+        // For text-only input, use the gemini-pro model
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+        const prompt = `What is the type of soil found in following location:` + 
+        `City : ${location}` + 
+        `Country : India` +
+        `I want the resonse in only one word to pass the soil type to call api`
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+        res.send(text)
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Couldn't fullfil your request at this time.");
+    }
+};
+

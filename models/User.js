@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+    username: {
+        type: String,
+        required: true,
+        unique: true
+    },
     firstName: {
         type: String,
         required: true
@@ -17,13 +22,12 @@ const userSchema = new Schema({
     },
     location: {
         type : String,
-        required : true
+        required : true,
+        default : "India"
     },
-    username: {
-        type: String,
-        required: true,
-        unique: true
-    },
+    soilType: {
+        type : String
+    },  
     password: {
         type: String,
         required: true

@@ -5,7 +5,7 @@ exports.addPesticide = async (req, res) => {
         const { name, price, weight, disc, image } = req.body;
         const newPesticide = new Pesticide({
             name,
-            pestPrice,
+            price,
             weight,
             disc,
             image

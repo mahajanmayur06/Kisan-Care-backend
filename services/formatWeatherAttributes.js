@@ -13,7 +13,7 @@ function formatWeatherData(data) {
     const text = `${name} has:\n` +
         `Temperature: ${temperature}, Pressure: ${pressure}, Humidity: ${humidity}\n` +
         `Weather: ${description}\n` +
-        `Wind: ${windSpeed}, Visibility: ${visibilityKm}, Cloudiness: ${cloudiness}`;
+        `Wind: ${windSpeed}, Visibility: ${visibilityKm}, Cloudiness: ${cloudiness}\n\n`;
 
     return text;
 }

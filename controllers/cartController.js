@@ -113,6 +113,7 @@ exports.clearCart = async (req, res) => {
     try {
         const user = await User.findOne({ username : username }).exec()
         user.cart = []
+        user.cartTotal = 0
         await user.save()
         console.log('cart cleared');
         res.status(200).json({ message : 'Cart cleared successfully'})
@@ -129,7 +130,7 @@ exports.removeFromCart = async (req, res) => {
         const user = await User.findOne({ username : username}).exec()
         user.cart = user.cart.filter((cartItem) => cartItem.itemName !== name)
 
-        user.save()
+        await user.save()
         console.log('Removed from cart');
         res.status(200).json(user.cart)
     }catch (err) {
