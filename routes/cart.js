@@ -6,6 +6,7 @@ router.get('/getCart', cartController.getCart)
 router.post('/addToCart', cartController.addToCart)
 router.delete('/clearCart', cartController.clearCart)
 router.delete('/removeFromCart', cartController.removeFromCart)
+router.get('/getCartTotal', cartController.getCartTotal)
 
 // POST request to add an item to the user's cart
 // router.post('/:username/add', cartController.addToCart);

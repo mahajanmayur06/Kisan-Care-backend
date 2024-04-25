@@ -58,7 +58,7 @@ exports.getWishlist = async (req, res) => {
                         seedName : item.name, 
                         seedType : item.type, 
                         seedPrice : item.price,
-                        type : type
+                        type : cartItem.type
                     });
                 }
             }
@@ -69,7 +69,7 @@ exports.getWishlist = async (req, res) => {
                         name : item.name, 
                         price : item.price,
                         discription : item.disc,
-                        type : type
+                        type : cartItem.type
                     });
                 }
             }
@@ -80,7 +80,7 @@ exports.getWishlist = async (req, res) => {
                         name : item.name, 
                         price : item.price,
                         discription : item.disc,
-                        type : type
+                        type : cartItem.type
                     });
                 }
             }

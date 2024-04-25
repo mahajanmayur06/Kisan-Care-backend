@@ -128,13 +128,35 @@ exports.removeFromCart = async (req, res) => {
     const {username, name }= req.body
     try {  
         const user = await User.findOne({ username : username}).exec()
-        user.cart = user.cart.filter((cartItem) => cartItem.itemName !== name)
+        let itemArray = user.cart.filter((cartItem) => cartItem.itemName === name)
 
+        if (itemArray[0].type === 'seed') {
+            item = await Seed.findOne({ name });
+        } else if (itemArray[0].type === 'fertilizer') {
+            item = await Fertilizer.findOne({ name });
+        } else {
+            item = await Pesticide.findOne({ name });
+        }
+
+        user.cartTotal = user.cartTotal - item.price * itemArray[0].quantity
+        user.cart = user.cart.filter((cartItem) => cartItem.itemName !== name)
         await user.save()
         console.log('Removed from cart');
         res.status(200).json(user.cart)
     }catch (err) {
         console.log(err.message);
         res.status(500).json({ message : err.message})
+    }
+}
+
+exports.getCartTotal = async (req, res) => {
+    const username = req.query
+    try {
+        const user =  await User.findOne({ username}).exec()
+        res.status(200).json(user.cartTotal)
+    } 
+    catch(err) {
+        console.log(err.message);
+        res.status(500).json({ message : 'Internal Server error'})
     }
 }
