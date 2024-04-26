@@ -55,9 +55,9 @@ exports.getWishlist = async (req, res) => {
                 item = await Seed.findOne({ name : cartItem.itemName});
                 if (item) {
                     wishlists.push({
-                        seedName : item.name, 
+                        name : item.name, 
                         seedType : item.type, 
-                        seedPrice : item.price,
+                        price : item.price,
                         type : cartItem.type
                     });
                 }
