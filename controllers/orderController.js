@@ -26,8 +26,8 @@ exports.placeOrder = async (req, res) => {
             cartTotal: cartTotal || 0,
         });
         await newOrder.save();
-        // user.cart = [];
-        // user.cartTotal = 0;
+        user.cart = [];
+        user.cartTotal = 0;
         await user.save();
         console.log('cart cleared during placing order');
         const line_items = cartItems.map((item) => ({
@@ -74,10 +74,25 @@ exports.verifyOrder = async (req, res ) => {
     }
 }
 
-// exports.userOrders = async (req, res) => {
-//     const username = req.query.username
-//     try {
-//         const user = await User.findOne({ username : username})
+exports.userOrders = async (req, res) => {
+    const username = req.query.username
+    try {
+        const orders = await Order.find({ username : username})
+        res.status(200).json({ success : true, orders : orders})
+    }
+    catch (err) {
+        console.log(err.message);
+        res.json({ success : false, message : err.message})
+    }
+}
 
-//     }
-// }
+exports.updateStatus = async (req, res) => {
+    try {
+        await Order.findByIdAndUpdate(req.body.orderId, { status : req.body.status })
+        res.json({ success : true, message : 'Status updated'})
+
+    }catch (err) {
+        console.log(err.message);
+        res.status({ success : false, message : 'Error occured'})
+    }
+}
