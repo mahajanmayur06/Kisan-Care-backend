@@ -9,7 +9,8 @@ exports.addAddress = async (req, res) => {
             address_line2 : req.body.address_line2,
             city : req.body.city,
             state : req.body.state,
-            postal_code : req.body.postal_code
+            postal_code : req.body.postal_code,
+            phone_number : req.body.phone_number
         })
         console.log(address);
         res.status(201).json({ message : 'Address addded'})

@@ -50,7 +50,7 @@ exports.getCart = async (req, res) => {
 
         user.cartTotal = total;
         await user.save();
-        console.log(`item removed from cart`);
+        // console.log(`item removed from cart`);
         res.status(200).json(cartItems);
     } catch (error) {
         console.log('Error while fetching items:', error.message);
@@ -97,7 +97,8 @@ exports.addToCart = async (req, res) => {
         user.cart.push({
             itemName: item.name,
             quantity: quantity,
-            type: type
+            type: type,
+            price : item.price
         });
           
         await user.save();
