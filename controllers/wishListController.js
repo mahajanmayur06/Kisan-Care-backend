@@ -34,6 +34,7 @@ exports.addToWishlist = async (req, res) => {
             type : type
         })
         await user.save()
+        console.log('added to wishlist');
         return res.json(user.wishList)
     }
     catch(err) {
@@ -85,7 +86,6 @@ exports.getWishlist = async (req, res) => {
                 }
             }
         }
-        // console.log(wishlists);
         res.status(200).json(wishlists)
     }
     catch(err) {
@@ -115,7 +115,7 @@ exports.deleteFromWishlist = async (req, res) => {
         user.wishList = user.wishList.filter(item => item.itemName !== name);
         await user.save();
         
-        console.log("Seed removed from wishlist:\n", user.wishList);
+        console.log("Seed removed from wishlist");
         return res.status(200).json({ message : `${name} removed from wishlist`, wishList : user.wishList});
     } catch (err) {
         return res.status(500).json({ message: err.message });
@@ -136,7 +136,7 @@ exports.clearWishList = async (req, res) => {
 
         user.wishList = []; // Set wishList to an empty array
         await user.save(); // Save changes
-
+        console.log('Wishlist cleared');
         return res.json({ message: 'Wish list cleared successfully' });
     } catch (error) {
         console.error('Error clearing wish list:', error);

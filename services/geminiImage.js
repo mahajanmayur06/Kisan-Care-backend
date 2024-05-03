@@ -5,10 +5,9 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const gemini = new GoogleGenerativeAI(process.env.GEMINI_api_key);
 
 const PROMPT = (
-    "Please provide the name of crop/seed/leaf or anything related to farming " +
+    "Please provide the name of crop/seed/leaf/plant or anything related to farming " +
     "of the provided image. Include information related to it. " +
     "Provide its state and whether there's a problem with the image provided. " +
-    "Give a solution in 70 to 80 words only. " +
     "Respond with 'Couldn\'t process the request... Ask related to farming.' if the image is not related to farming."
 );
 

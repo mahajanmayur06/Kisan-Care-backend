@@ -50,7 +50,7 @@ exports.getCart = async (req, res) => {
 
         user.cartTotal = total;
         await user.save();
-        console.log(cartItems);
+        console.log(`item removed from cart`);
         res.status(200).json(cartItems);
     } catch (error) {
         console.log('Error while fetching items:', error.message);
@@ -102,7 +102,7 @@ exports.addToCart = async (req, res) => {
           
         await user.save();
 
-        console.log(user.cart);
+        console.log(`${item.name} added to cart`);
         return res.json({ message: `${item.name} added to cart successfully`, cart: user.cart });
     } catch (error) {
         console.error('Error adding item to cart:', error);

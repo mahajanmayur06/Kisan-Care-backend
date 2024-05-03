@@ -1,7 +1,7 @@
 const multer = require('multer')
 const path = require('path')
 
-const DESTINATION_PATH = "images"
+const DESTINATION_PATH = "./images"
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => {
         try {
             const extname = path.extname(file.originalname)
-            const filename = `${Date.now()}${extname}`
+            const filename = `${file.originalname}${extname}`
             cb(null, filename)
         } catch (error) {
             cb(error)

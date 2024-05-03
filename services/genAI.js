@@ -37,15 +37,11 @@ exports.generateResponse = async (req, res) => {
     try {
         // For text-only input, use the gemini-pro model
         const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
+        // const newPrompt = prompt + "\nIf above query is not regarding agriculture, farming, farmers, then give response as 'Could not provide service'"
         const result = await model.generateContent(prompt);
         const response = await result.response;
         const text = response.text();
         console.log('Text generated');
-        // encodedParams.set('q', text);
-        // encodedParams.set('target', 'hi');
-        // encodedParams.set('source', 'en');
-        // const textResponse = translateToHindi()
         res.send(text);
     } catch (error) {
         console.log(error);
@@ -55,6 +51,9 @@ exports.generateResponse = async (req, res) => {
 
 exports.weatherResponse = async (req, res) => {
     const { seedName, date, location, type } = req.body
+    if (!seedName || !date) {
+        return 'Seed name and date not selected'
+    }
     try {
         const forecast = await axios.get('http://localhost:3500/weather-forecast', {
             params: {
