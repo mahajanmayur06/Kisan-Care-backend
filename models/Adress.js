@@ -19,16 +19,17 @@ const addressSchema = new mongoose.Schema({
         required: true
     },
     postal_code: {
-        type: String,
+        type: Number,
         required: true
     },
     country: {
         type: String,
-        required: true
+        required: true,
+        default : "India"
     },
     phone_number: {
         type: String,
-        required: true
+        // required: true
     }
 });
 

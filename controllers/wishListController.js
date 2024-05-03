@@ -85,7 +85,7 @@ exports.getWishlist = async (req, res) => {
                 }
             }
         }
-        console.log(wishlists);
+        // console.log(wishlists);
         res.status(200).json(wishlists)
     }
     catch(err) {

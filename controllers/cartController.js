@@ -9,10 +9,10 @@ exports.getCart = async (req, res) => {
     try {
         const user = await User.findOne({ username: username }).exec();
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(204).json({ message: "User not found" });
         }
         if (user.cart.length === 0) {
-            return res.status(404).json({ message: 'Cart is Empty' });
+            return res.status(204).json({ message: 'Cart is Empty' });
         }
 
         if (!user.cart) {
@@ -76,11 +76,11 @@ exports.addToCart = async (req, res) => {
         }
 
         if (!user) {
-            return res.status(404).json({ message: `User ${username} not found` });
+            return res.status(204).json({ message: `User ${username} not found` });
         }
 
         if (!item) {
-            return res.status(404).json({ message: 'Item not found' });
+            return res.status(204).json({ message: 'Item not found' });
         }
         
         const hasItem = user.cart.filter(cartItem => cartItem.itemName === name && cartItem.type === type);
@@ -116,7 +116,7 @@ exports.clearCart = async (req, res) => {
     try {
         const user = await User.findOne({ username : username }).exec()
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(204).json({ message: 'User not found' });
         }
         user.cart = []
         user.cartTotal = 0

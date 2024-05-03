@@ -3,6 +3,35 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_api_key);
 const axios = require('axios')
 const formatWeatherData = require('./formatWeatherAttributes');
 
+const fetch = require('node-fetch');
+
+const encodedParams = new URLSearchParams();
+
+const url = 'https://google-translate1.p.rapidapi.com/language/translate/v2';
+const options = {
+    method: 'POST',
+    headers: {
+        'content-type': 'application/x-www-form-urlencoded',
+        'Accept-Encoding': 'application/gzip',
+        'X-RapidAPI-Key': process.env.TRANSLATE_api_key,
+        'X-RapidAPI-Host': 'google-translate1.p.rapidapi.com'
+    },
+    body: encodedParams
+};
+
+const translateToHindi = async () => {
+    try {
+        const response = await fetch(url, options);
+        const result = await response.text();
+        console.log('Translated to hindi')
+        console.log(result);
+        return result
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
 exports.generateResponse = async (req, res) => {
     const { prompt } = req.body;
     try {
@@ -12,6 +41,11 @@ exports.generateResponse = async (req, res) => {
         const result = await model.generateContent(prompt);
         const response = await result.response;
         const text = response.text();
+        console.log('Text generated');
+        // encodedParams.set('q', text);
+        // encodedParams.set('target', 'hi');
+        // encodedParams.set('source', 'en');
+        // const textResponse = translateToHindi()
         res.send(text);
     } catch (error) {
         console.log(error);

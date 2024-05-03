@@ -13,6 +13,7 @@ const credentials = require('./middleware/credentials');
 const dbConn = require('./config/dbConn');
 // const { default: OpenAI } = require('openai/index.mjs');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { applyDefaults } = require('./models/User');
 
 // create instance of razopay
 // const instance = new Razorpay({
@@ -38,6 +39,7 @@ app.use('/', require('./routes/genAI'))
 app.use('/', require('./routes/wishList'))
 app.use('/', require('./routes/fertilizers'))
 app.use('/', require('./routes/pesticides'))
+app.use('/', require('./routes/imageUpload'))
 // app.use('/checkout', require('./routes/paymentRoute'))
 
 // open-ai integration
