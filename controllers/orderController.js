@@ -20,12 +20,11 @@ exports.placeOrder = async (req, res) => {
             return res.json({ message : 'user not found'})
         }
         const address = await Address.findOne({ username: username });
-        console.log('User:', user); 
-        console.log('Address:', address); 
+        console.log('cart:', cartItems); 
         const newOrder = new Order({
             username: username,
             address: address ? address._id : null,
-            cart: cartItems || [],
+            cartItems: cartItems || [],
             cartTotal: cartTotal || 0,
         });
         await newOrder.save();
@@ -81,8 +80,8 @@ exports.userOrders = async (req, res) => {
     const username = req.query.username
     try {
         const orders = await Order.find({ username : username})
-        
-        res.status(200).json({ success : true, orders : ordersArray})
+
+        res.status(200).json({ success : true, orders : orders})
     }
     catch (err) {
         console.log(err.message);

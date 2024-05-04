@@ -9,7 +9,7 @@ const orderSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    cart: [{
+    cartItems: [{
         itemName : {
             type : String
         },
@@ -31,8 +31,8 @@ const orderSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Pending', 'Out for Delivery', 'Shipped', 'Delivered'],
-        default: 'Pending'
+        enum: ['Order Placed', 'Out for Delivery', 'Shipped', 'Delivered'],
+        default: 'Order Placed'
     },
     payment: {
         type : Boolean,
