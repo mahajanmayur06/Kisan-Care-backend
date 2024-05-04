@@ -1,8 +1,11 @@
 const User = require('../models/User');
 const Order = require('../models/Order');
 const Address = require('../models/Address')
+const Seed = require('../models/Seed')
+const Pesticide = require('../models/Pesticide')
 const axios = require('axios');
 const Stripe = require('stripe');
+const Fertilizer = require('../models/Fertilizer');
 
 const stripe = new Stripe(process.env.STRIPE_api_key);
 const frontendURL = 'http://localhost:3000';
@@ -78,7 +81,8 @@ exports.userOrders = async (req, res) => {
     const username = req.query.username
     try {
         const orders = await Order.find({ username : username})
-        res.status(200).json({ success : true, orders : orders})
+        
+        res.status(200).json({ success : true, orders : ordersArray})
     }
     catch (err) {
         console.log(err.message);
