@@ -38,6 +38,7 @@ app.use('/', require('./routes/fertilizers'))
 app.use('/', require('./routes/pesticides'))
 app.use('/', require('./routes/imageUpload'))
 app.use('/', require('./routes/weather'))
+app.use('/', require('./routes/order'))
 // app.use('/checkout', require('./routes/paymentRoute'))
 
 // Start the server

@@ -16,9 +16,8 @@ function fileToGenerativePart(filePath, mimeType) {
         throw new Error('File path is undefined or null.');
     }
 
-    const fullPath = path.join(__dirname, '..', 'images', filePath); // Adjust path as needed
+    const fullPath = path.join(__dirname, '..', 'images', filePath); 
 
-    // Check if fullPath is a directory
     const isDirectory = fs.statSync(fullPath).isDirectory();
     if (isDirectory) {
         throw new Error(`The path "${fullPath}" points to a directory, not a file.`);

@@ -43,6 +43,9 @@ const userSchema = new Schema({
         type: { 
             type : String
         },
+        price: {
+            type : Number
+        },
         quantity: {
             type: Number,
             default: 1
