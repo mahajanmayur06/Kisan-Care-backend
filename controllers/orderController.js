@@ -20,13 +20,26 @@ exports.placeOrder = async (req, res) => {
             return res.json({ message : 'user not found'})
         }
         const address = await Address.findOne({ username: username });
-        console.log('cart:', cartItems); 
+
+        console.log('cart:', cartItems);
+        
         const newOrder = new Order({
             username: username,
             address: address ? address._id : null,
-            cartItems: cartItems || [],
+            cartItems: [],
             cartTotal: cartTotal || 0,
         });
+        for (cart of cartItems) {
+            newOrder.cartItems.push({
+                name : cart.name,
+                price : cart.price,
+                type: cart.type,
+                seedType : cart.seedType || null,
+                quantity : cart.quantity
+            })
+        }
+        await newOrder.save()
+        console.log(newOrder)
         await newOrder.save();
         user.cart = [];
         user.cartTotal = 0;
@@ -42,8 +55,7 @@ exports.placeOrder = async (req, res) => {
             },
             quantity: item.quantity,
         }));
-
-        console.log(line_items);
+        // console.log(line_items);
         const session = await stripe.checkout.sessions.create({
             line_items: line_items,
             mode: 'payment',

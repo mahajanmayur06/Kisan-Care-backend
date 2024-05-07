@@ -136,7 +136,7 @@ exports.removeFromCart = async (req, res) => {
     try {  
         const user = await User.findOne({ username : username}).exec()
         let itemArray = user.cart.filter((cartItem) => cartItem.itemName === name)
-        console.log(itemArray);
+        // console.log(itemArray);
         if (itemArray[0].type === 'seed') {
             item = await Seed.findOne({ name });
         } else if (itemArray[0].type === 'fertilizer') {

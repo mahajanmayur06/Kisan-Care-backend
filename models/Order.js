@@ -10,8 +10,14 @@ const orderSchema = new mongoose.Schema({
         default: Date.now
     },
     cartItems: [{
-        itemName : {
+        name : {
             type : String
+        },
+        price: {
+            type: Number
+        },
+        seedType: {
+            type: String
         },
         type : {
             type : String
