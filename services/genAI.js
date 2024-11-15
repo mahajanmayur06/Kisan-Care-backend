@@ -38,7 +38,8 @@ exports.generateResponse = async (req, res) => {
         // For text-only input, use the gemini-pro model
         const model = genAI.getGenerativeModel({ model: "gemini-pro" });
         // const newPrompt = prompt + "\nIf above query is not regarding agriculture, farming, farmers, then give response as 'Could not provide service'"
-        const result = await model.generateContent(prompt);
+        const newPrompt = prompt + "\nPlease give response in hindi language barrier."
+        const result = await model.generateContent(newPrompt);
         const response = await result.response;
         const text = response.text();
         console.log('Text generated');
@@ -68,7 +69,8 @@ exports.weatherResponse = async (req, res) => {
             `Do I need to add fertilizers for healthy yield and which one to be added?\n` +
             `Suggest the companies in Indian market that manufacture them with the price and quantity?\n` +
             `What are the major threats from pests and which pesticides to be used?\n` +
-            `Suggest the companies in Indian market that manufacture them with the price and quantity`;
+            `Suggest the companies in Indian market that manufacture them with the price and quantity` + 
+            `\nPlease give this response in Hindi language barrier.`
 
         // Generate response using generative AI model
         const model = genAI.getGenerativeModel({ model: "gemini-pro" });

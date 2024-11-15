@@ -8,7 +8,8 @@ const PROMPT = (
     "On the first line give whether the plant is healthy or not and then give the name and short description about the condition" +
     "of the plant in the provided image. Give the answer in points with each point on a new line and do not use '*' anywhere " +
     "Provide its health and whether there's a problem with the plant in the provided image. if yes tell the problem of the plant health along with the solution including the fertilizers/pesticides to be used and special care to be taken" +
-    "Respond with 'Couldn\'t process the request... Ask related to farming.' if the image is not related to farming."
+    "Respond with 'Couldn\'t process the request... Ask related to farming.' if the image is not related to farming."+
+    `\nPlease give this response in Hindi language barrier.` 
 );
 
 function fileToGenerativePart(filePath, mimeType) {
@@ -40,7 +41,7 @@ const geminiImageBot = async (req, file) => {
 
         const imageParts = [fileToGenerativePart(file.filename, file.mimetype)];
 
-        const model = gemini.getGenerativeModel({ model: 'gemini-pro-vision' });
+        const model = gemini.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
         const result = await model.generateContent([PROMPT, ...imageParts]);
         const response = result.response;
